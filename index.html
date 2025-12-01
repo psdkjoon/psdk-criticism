@@ -1,350 +1,604 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PSDK'S Criticism Website</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap');
-        :root {
-            --ctp-rosewater: #f5e0dc;
-            --ctp-flamingo: #f2cdcd;
-            --ctp-pink: #f5c2e7;
-            --ctp-mauve: #cba6f7;
-            --ctp-red: #f38ba8;
-            --ctp-maroon: #eba0ac;
-            --ctp-peach: #fab387;
-            --ctp-yellow: #f9e2af;
-            --ctp-green: #a6e3a1;
-            --ctp-teal: #94e2d5;
-            --ctp-sky: #89dceb;
-            --ctp-sapphire: #74c7ec;
-            --ctp-blue: #89b4fa;
-            --ctp-lavender: #b4befe;
-            --ctp-text: #cdd6f4;
-            --ctp-subtext1: #bac2de;
-            --ctp-surface0: #313244;
-            --ctp-surface1: #45475a;
-            --ctp-base: #1e1e2e;
-            --ctp-crust: #11111b;
-            --accent: var(--ctp-mauve);
-        }
-        body {
-            background-color: var(--ctp-surface0);
-            color: var(--ctp-text);
-            font-family: 'EB Garamond', sans-serif;
-            overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-        }
-        #canvas-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.4;
-        }
-        .title-font {
-            font-family: 'EB Garamond';
-        }
-        .glass-panel {
-            background: rgba(30, 30, 46, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-        .toggle-checkbox:checked {
-            right: 0;
-            border-color: var(--accent);
-        }
-        .toggle-checkbox:checked + .toggle-label {
-            background-color: var(--accent);
-        }
-        .input-field {
-            background-color: var(--ctp-surface1);
-            color: var(--ctp-text);
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-        .input-field:focus {
-            border-color: var(--accent);
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.2);
-        }
-        .btn-primary {
-            font-family: 'EB Garamond';
-            background-color: var(--accent);
-            color: var(--ctp-surface0);
-            transition: transform 0.2s, filter 0.2s;
-        }
-        .btn-primary:hover {
-            filter: brightness(1.1);
-            transform: translateY(-2px);
-        }
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-        .accent-text {
-            color: var(--accent);
-        }
-        #nameFieldContainer {
-            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, margin 0.5s ease-in-out;
-        }
+      @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&family=Vazirmatn:wght@400;600;700&display=swap");
+      :root {
+        --ctp-rosewater: #f5e0dc;
+        --ctp-flamingo: #f2cdcd;
+        --ctp-pink: #f5c2e7;
+        --ctp-mauve: #cba6f7;
+        --ctp-red: #f38ba8;
+        --ctp-maroon: #eba0ac;
+        --ctp-peach: #fab387;
+        --ctp-yellow: #f9e2af;
+        --ctp-green: #a6e3a1;
+        --ctp-teal: #94e2d5;
+        --ctp-sky: #89dceb;
+        --ctp-sapphire: #74c7ec;
+        --ctp-blue: #89b4fa;
+        --ctp-lavender: #b4befe;
+        --ctp-text: #cdd6f4;
+        --ctp-subtext1: #bac2de;
+        --ctp-surface0: #313244;
+        --ctp-surface1: #45475a;
+        --ctp-base: #1e1e2e;
+        --ctp-crust: #11111b;
+        --accent: var(--ctp-mauve);
+      }
+      body {
+        background-color: var(--ctp-surface0);
+        color: var(--ctp-text);
+        font-family: "EB Garamond", "Vazirmatn", sans-serif;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+      }
+      body.rtl {
+        font-family: "Vazirmatn", "EB Garamond", sans-serif;
+      }
+      #canvas-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.4;
+      }
+      .title-font {
+        font-family: "EB Garamond", "Vazirmatn";
+      }
+      .rtl .title-font {
+        font-family: "Vazirmatn", "EB Garamond";
+      }
+      .glass-panel {
+        background: rgba(30, 30, 46, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+      .toggle-checkbox:checked + .toggle-label {
+        background-color: var(--accent);
+      }
+      .input-field {
+        background-color: var(--ctp-surface1);
+        color: var(--ctp-text);
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+      }
+      .input-field:focus {
+        border-color: var(--accent);
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.2);
+      }
+      .btn-primary {
+        font-family: "EB Garamond", "Vazirmatn";
+        background-color: var(--accent);
+        color: var(--ctp-surface0);
+        transition:
+          transform 0.2s,
+          filter 0.2s;
+      }
+      .rtl .btn-primary {
+        font-family: "Vazirmatn", "EB Garamond";
+      }
+      .btn-primary:hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+      }
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+      .accent-text {
+        color: var(--accent);
+      }
+      #nameFieldContainer {
+        transition:
+          max-height 0.5s ease-in-out,
+          opacity 0.5s ease-in-out,
+          margin 0.5s ease-in-out;
+      }
+      #langToggle {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 50;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      #langToggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(203, 166, 247, 0.3);
+      }
+      #langToggle:active {
+        transform: scale(0.95);
+      }
+      .lang-icon {
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .toggle-container {
+        position: relative;
+        width: 36px;
+        height: 20px;
+      }
+      .toggle-checkbox {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--ctp-surface0);
+        border: 1px solid var(--ctp-surface1);
+        transition: 0.3s;
+        border-radius: 20px;
+      }
+      .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 1px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+      .toggle-checkbox:checked + .toggle-slider {
+        background-color: var(--accent);
+        border-color: var(--accent);
+      }
+      .toggle-checkbox:checked + .toggle-slider:before {
+        transform: translateX(16px);
+      }
+      .rtl .toggle-slider:before {
+        left: auto;
+        right: 2px;
+      }
+      .rtl .toggle-checkbox:checked + .toggle-slider:before {
+        transform: translateX(-16px);
+      }
     </style>
-</head>
-<body class="min-h-screen flex flex-col items-center justify-center relative">
+  </head>
+  <body class="min-h-screen flex flex-col items-center justify-center relative">
     <canvas id="canvas-bg"></canvas>
-    <main class="w-full max-w-md p-5 mx-4 rounded-2xl glass-panel relative z-10 fade-in">
-        <div class="text-center mb-4">
-            <h1 class="title-font text-4xl font-bold tracking-tight">
-                <span class="accent-text">PSDK'S</span> Criticism Website
-            </h1>
-            <p class="mt-2 text-sm text-[var(--ctp-subtext1)] opacity-80">Speak your mind, I'm listening.</p>
+
+    <button
+      id="langToggle"
+      class="glass-panel rounded-full"
+      title="تغییر زبان / Change Language"
+    >
+      <span class="lang-icon accent-text" id="langText">فا</span>
+    </button>
+
+    <main
+      class="w-full max-w-md p-5 mx-4 rounded-2xl glass-panel relative z-10 fade-in"
+    >
+      <div class="text-center mb-4">
+        <h1 class="title-font text-4xl font-bold tracking-tight">
+          <span class="en-title"
+            ><span class="accent-text">PSDK'S</span> Criticism Website</span
+          >
+          <span class="fa-title" style="display: none"
+            >تارنمای نقد <span class="accent-text">حسین</span></span
+          >
+        </h1>
+        <p
+          class="mt-2 text-sm text-[var(--ctp-subtext1)] opacity-80"
+          data-i18n="tagline"
+        >
+          Speak your mind, I'm listening.
+        </p>
+      </div>
+      <form id="criticismForm" class="space-y-4">
+        <div
+          class="flex items-center justify-between bg-[var(--ctp-surface1)] p-3 rounded-lg"
+        >
+          <span
+            class="text-sm font-medium text-[var(--ctp-text)] flex items-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 accent-text"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span data-i18n="identifyLabel">Identify Yourself?</span>
+          </span>
+          <label class="toggle-container">
+            <input
+              type="checkbox"
+              name="is_anonymous"
+              id="toggle"
+              class="toggle-checkbox"
+            />
+            <span class="toggle-slider"></span>
+          </label>
         </div>
-        <form id="criticismForm" class="space-y-4">
-            <div class="flex items-center justify-between bg-[var(--ctp-surface1)] p-3 rounded-lg">
-                <span class="text-sm font-medium text-[var(--ctp-text)] flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 accent-text" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" />
-                    </svg>
-                    Identify Yourself?
-                </span>
-                <div class="relative inline-block w-9 align-middle select-none transition duration-200 ease-in">
-                    <input type="checkbox" name="is_anonymous" id="toggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 ease-in-out transform translate-x-0 checked:translate-x-4 checked:border-[var(--accent)]" style="top: -2px; left: 0; border-color: var(--ctp-surface1);"/>
-                    <label for="toggle" class="toggle-label block overflow-hidden h-4 rounded-full bg-[var(--ctp-surface0)] cursor-pointer border border-[var(--ctp-surface1)]"></label>
-                </div>
-            </div>
-            <div id="nameFieldContainer" class="overflow-hidden -mx-2 px-2" style="max-height: 0px; opacity: 0; margin-top: 0; margin-bottom: 0;">
-                <label for="name" class="block text-xs font-bold uppercase tracking-wide mb-1 accent-text">Your Name</label>
-                <input type="text" id="name" placeholder="Nicolas Cage" class="input-field w-full px-4 py-3 rounded-lg focus:ring-0">
-            </div>
-            <div>
-                <label for="message" class="block text-xs font-bold uppercase tracking-wide mb-1 accent-text">Criticism / Message</label>
-                <textarea id="message" rows="5" placeholder="Type your thoughts here..." class="input-field w-full px-4 py-3 rounded-lg resize-none focus:ring-0" required></textarea>
-            </div>
-            <button type="submit" id="submitBtn" class="btn-primary w-full py-3 px-4 rounded-lg font-bold shadow-lg flex justify-center items-center gap-2">
-                <span>Send Feedback</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                </svg>
-            </button>
-            <p id="statusMessage" class="text-center text-sm h-5 font-semibold"></p>
-        </form>
+        <div
+          id="nameFieldContainer"
+          class="overflow-hidden -mx-2 px-2"
+          style="max-height: 0px; opacity: 0; margin-top: 0; margin-bottom: 0"
+        >
+          <label
+            for="name"
+            class="block text-xs font-bold uppercase tracking-wide mb-1 accent-text"
+            data-i18n="nameLabel"
+            >Your Name</label
+          >
+          <input
+            type="text"
+            id="name"
+            data-i18n-placeholder="namePlaceholder"
+            placeholder="Nicolas Cage"
+            class="input-field w-full px-4 py-3 rounded-lg focus:ring-0"
+          />
+        </div>
+        <div>
+          <label
+            for="message"
+            class="block text-xs font-bold uppercase tracking-wide mb-1 accent-text"
+            data-i18n="messageLabel"
+            >Criticism / Message</label
+          >
+          <textarea
+            id="message"
+            rows="5"
+            data-i18n-placeholder="messagePlaceholder"
+            placeholder="Type your thoughts here..."
+            class="input-field w-full px-4 py-3 rounded-lg resize-none focus:ring-0"
+            required
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          id="submitBtn"
+          class="btn-primary w-full py-3 px-4 rounded-lg font-bold shadow-lg flex justify-center items-center gap-2"
+        >
+          <span data-i18n="submitBtn">Send Feedback</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"
+            />
+          </svg>
+        </button>
+        <p id="statusMessage" class="text-center text-sm h-5 font-semibold"></p>
+      </form>
     </main>
     <script>
-        const colors = [
-            { name: 'rosewater', hex: '#f5e0dc' },
-            { name: 'flamingo', hex: '#f2cdcd' },
-            { name: 'pink', hex: '#f5c2e7' },
-            { name: 'mauve', hex: '#cba6f7' },
-            { name: 'red', hex: '#f38ba8' },
-            { name: 'maroon', hex: '#eba0ac' },
-            { name: 'peach', hex: '#fab387' },
-            { name: 'yellow', hex: '#f9e2af' },
-            { name: 'green', hex: '#a6e3a1' },
-            { name: 'teal', hex: '#94e2d5' },
-            { name: 'sky', hex: '#89dceb' },
-            { name: 'sapphire', hex: '#74c7ec' },
-            { name: 'blue', hex: '#89b4fa' },
-            { name: 'lavender', hex: '#b4befe' }
-        ];
-        function hexToRgb(hex) {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : null;
+      const translations = {
+        en: {
+          tagline: "Speak your mind, I'm listening.",
+          identifyLabel: "Identify Yourself?",
+          nameLabel: "Your Name",
+          namePlaceholder: "Nicolas Cage",
+          messageLabel: "Criticism / Message",
+          messagePlaceholder: "Type your thoughts here...",
+          submitBtn: "Send Feedback",
+          sending: "Sending...",
+          successMsg: "Sent successfully!",
+          errorMsg: "Failed to send. Try again.",
+          langBtn: "فا",
+        },
+        fa: {
+          tagline: "هر چه در دل داری بگو، گوش می‌دهم.",
+          identifyLabel: "خودت را بشناسانی؟",
+          nameLabel: "نام تو",
+          namePlaceholder: "آهیل شایان",
+          messageLabel: "نقد / پیام",
+          messagePlaceholder: "اندیشه‌هایت را اینجا بنویس...",
+          submitBtn: "فرستادن بازخورد",
+          sending: "در حال فرستادن...",
+          successMsg: "با کامیابی فرستاده شد!",
+          errorMsg: "فرستادن ناکام بود. دوباره بکوش.",
+          langBtn: "EN",
+        },
+      };
+
+      let currentLang = localStorage.getItem("preferredLang") || "en";
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem("preferredLang", lang);
+        const html = document.documentElement;
+        const body = document.body;
+
+        if (lang === "fa") {
+          html.setAttribute("lang", "fa");
+          html.setAttribute("dir", "rtl");
+          body.classList.add("rtl");
+        } else {
+          html.setAttribute("lang", "en");
+          html.setAttribute("dir", "ltr");
+          body.classList.remove("rtl");
         }
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-        const root = document.documentElement;
-        root.style.setProperty('--accent', randomColor.hex);
-        root.style.setProperty('--accent-rgb', hexToRgb(randomColor.hex));
 
-        const toggle = document.getElementById('toggle');
-        const nameContainer = document.getElementById('nameFieldContainer');
-        let overflowTimeout;
+        document.querySelector(".en-title").style.display =
+          lang === "en" ? "inline" : "none";
+        document.querySelector(".fa-title").style.display =
+          lang === "fa" ? "inline" : "none";
 
-        if(toggle.checked) {
-            nameContainer.style.maxHeight = '100px';
-            nameContainer.style.opacity = '1';
-            nameContainer.style.marginTop = '0';
-            nameContainer.style.marginBottom = '1rem';
-            nameContainer.style.overflow = 'visible';
-        }
-
-        toggle.addEventListener('change', function() {
-            clearTimeout(overflowTimeout);
-            if(this.checked) {
-                nameContainer.style.maxHeight = '100px';
-                nameContainer.style.opacity = '1';
-                nameContainer.style.marginTop = '0';
-                nameContainer.style.marginBottom = '1rem';
-                overflowTimeout = setTimeout(() => {
-                    nameContainer.style.overflow = 'visible';
-                }, 500);
-                document.getElementById('name').focus();
-            } else {
-                nameContainer.style.overflow = 'hidden';
-                nameContainer.style.maxHeight = '0px';
-                nameContainer.style.opacity = '0';
-                nameContainer.style.marginTop = '0';
-                nameContainer.style.marginBottom = '0';
-            }
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (translations[lang][key]) {
+            el.textContent = translations[lang][key];
+          }
         });
 
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+          const key = el.getAttribute("data-i18n-placeholder");
+          if (translations[lang][key]) {
+            el.placeholder = translations[lang][key];
+          }
+        });
 
-        const patterns = [
-            {
-                init: () => ({ offset: 0 }),
-                draw: (state) => {
-                    ctx.clearRect(0, 0, width, height);
-                    ctx.lineWidth = 20;
-                    ctx.lineCap = 'round';
-                    ctx.strokeStyle = randomColor.hex;
-                    const spacing = 60;
-                    state.offset += 0.2;
-                    if (state.offset > spacing) state.offset = 0;
-                    for (let x = -spacing; x < width + spacing + 300; x += spacing) {
-                        ctx.beginPath();
-                        ctx.moveTo(x + state.offset, -20);
-                        ctx.lineTo(x + state.offset - 200, height + 20);
-                        ctx.globalAlpha = 0.15;
-                        ctx.stroke();
-                    }
-                }
-            },
-            {
-                init: () => ({ t: 0 }),
-                draw: (state) => {
-                    ctx.clearRect(0, 0, width, height);
-                    ctx.fillStyle = randomColor.hex;
-                    ctx.globalAlpha = 0.15;
-                    state.t += 0.005;
-                    const radius = 15;
-                    const spacing = 60;
-                    const rows = Math.ceil(height / spacing) + 1;
-                    for (let i = 0; i < rows; i++) {
-                        const y = i * spacing;
-                        const rowIsEven = i % 2 === 0;
-                        const direction = rowIsEven ? 1 : -1;
-                        let xOffset = (state.t * 20 * direction) % spacing;
-                        for (let x = -spacing; x < width + spacing; x += spacing) {
-                            let drawX = x + xOffset;
-                            ctx.beginPath();
-                            ctx.arc(drawX, y, radius, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                }
-            },
-            {
-                init: () => ({ rotation: 0, pulse: 0 }),
-                draw: (state) => {
-                    ctx.clearRect(0, 0, width, height);
-                    ctx.fillStyle = randomColor.hex;
-                    ctx.globalAlpha = 0.1;
-                    state.rotation += 0.002;
-                    state.pulse += 0.02;
-                    const scale = 1 + Math.sin(state.pulse) * 0.2;
-                    const spacing = 150;
-                    for (let x = 0; x < width + spacing; x += spacing) {
-                        for (let y = 0; y < height + spacing; y += spacing) {
-                            const offsetX = ((y / spacing) % 2) * (spacing / 2);
-                            ctx.save();
-                            ctx.translate(x + offsetX, y);
-                            ctx.rotate(state.rotation * (x % 2 === 0 ? 1 : -1));
-                            ctx.scale(scale, scale);
-                            for(let i=0; i<4; i++) {
-                                ctx.rotate(Math.PI / 2);
-                                ctx.beginPath();
-                                ctx.arc(20, 0, 15, 0, Math.PI * 2);
-                                ctx.fill();
-                            }
-                            ctx.restore();
-                        }
-                    }
-                }
-            },
-            {
-                init: () => {
-                    const items = [];
-                    const count = 50;
-                    const w = window.innerWidth && window.innerWidth > 0 ? window.innerWidth : 1000;
-                    const h = window.innerHeight && window.innerHeight > 0 ? window.innerHeight : 1000;
-                    for(let i=0; i<count; i++) {
-                        items.push({
-                            x: Math.random() * w,
-                            y: Math.random() * h,
-                            size: 10 + Math.random() * 30,
-                            speedY: -0.2 - Math.random() * 0.3,
-                            rotation: Math.random() * Math.PI,
-                            rotSpeed: (Math.random() - 0.5) * 0.02
-                        });
-                    }
-                    return { items };
-                },
-                draw: (state) => {
-                    ctx.clearRect(0, 0, width, height);
-                    ctx.fillStyle = randomColor.hex;
-                    ctx.globalAlpha = 0.12;
-                    state.items.forEach(item => {
-                        item.y += item.speedY;
-                        item.rotation += item.rotSpeed;
-                        if(item.y < -50) {
-                            item.y = height + 50;
-                            item.x = Math.random() * width;
-                        }
-                        if (item.x > width + 100) item.x = Math.random() * width;
-                        if (item.x < -100) item.x = Math.random() * width;
-                        ctx.save();
-                        ctx.translate(item.x, item.y);
-                        ctx.rotate(item.rotation);
-                        ctx.beginPath();
-                        ctx.moveTo(0, -item.size);
-                        ctx.lineTo(item.size, item.size);
-                        ctx.lineTo(-item.size, item.size);
-                        ctx.closePath();
-                        ctx.fill();
-                        ctx.restore();
-                    });
-                }
+        document.getElementById("langText").textContent =
+          translations[lang].langBtn;
+
+        document.title =
+          lang === "fa" ? "تارنمای نقد حسین" : "PSDK'S Criticism Website";
+      }
+
+      setLanguage(currentLang);
+
+      document.getElementById("langToggle").addEventListener("click", () => {
+        const newLang = currentLang === "en" ? "fa" : "en";
+        setLanguage(newLang);
+      });
+
+      const colors = [
+        { name: "rosewater", hex: "#f5e0dc" },
+        { name: "flamingo", hex: "#f2cdcd" },
+        { name: "pink", hex: "#f5c2e7" },
+        { name: "mauve", hex: "#cba6f7" },
+        { name: "red", hex: "#f38ba8" },
+        { name: "maroon", hex: "#eba0ac" },
+        { name: "peach", hex: "#fab387" },
+        { name: "yellow", hex: "#f9e2af" },
+        { name: "green", hex: "#a6e3a1" },
+        { name: "teal", hex: "#94e2d5" },
+        { name: "sky", hex: "#89dceb" },
+        { name: "sapphire", hex: "#74c7ec" },
+        { name: "blue", hex: "#89b4fa" },
+        { name: "lavender", hex: "#b4befe" },
+      ];
+      function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result
+          ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+          : null;
+      }
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      const root = document.documentElement;
+      root.style.setProperty("--accent", randomColor.hex);
+      root.style.setProperty("--accent-rgb", hexToRgb(randomColor.hex));
+
+      const toggle = document.getElementById("toggle");
+      const nameContainer = document.getElementById("nameFieldContainer");
+      let overflowTimeout;
+
+      if (toggle.checked) {
+        nameContainer.style.maxHeight = "100px";
+        nameContainer.style.opacity = "1";
+        nameContainer.style.marginTop = "0";
+        nameContainer.style.marginBottom = "1rem";
+        nameContainer.style.overflow = "visible";
+      }
+
+      toggle.addEventListener("change", function () {
+        clearTimeout(overflowTimeout);
+        if (this.checked) {
+          nameContainer.style.maxHeight = "100px";
+          nameContainer.style.opacity = "1";
+          nameContainer.style.marginTop = "0";
+          nameContainer.style.marginBottom = "1rem";
+          overflowTimeout = setTimeout(() => {
+            nameContainer.style.overflow = "visible";
+          }, 500);
+          document.getElementById("name").focus();
+        } else {
+          nameContainer.style.overflow = "hidden";
+          nameContainer.style.maxHeight = "0px";
+          nameContainer.style.opacity = "0";
+          nameContainer.style.marginTop = "0";
+          nameContainer.style.marginBottom = "0";
+        }
+      });
+
+      const canvas = document.getElementById("canvas-bg");
+      const ctx = canvas.getContext("2d");
+      let width, height;
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      const patterns = [
+        {
+          init: () => ({ offset: 0 }),
+          draw: (state) => {
+            ctx.clearRect(0, 0, width, height);
+            ctx.lineWidth = 20;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = randomColor.hex;
+            const spacing = 60;
+            state.offset += 0.2;
+            if (state.offset > spacing) state.offset = 0;
+            for (let x = -spacing; x < width + spacing + 300; x += spacing) {
+              ctx.beginPath();
+              ctx.moveTo(x + state.offset, -20);
+              ctx.lineTo(x + state.offset - 200, height + 20);
+              ctx.globalAlpha = 0.15;
+              ctx.stroke();
             }
-        ];
+          },
+        },
+        {
+          init: () => ({ t: 0 }),
+          draw: (state) => {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = randomColor.hex;
+            ctx.globalAlpha = 0.15;
+            state.t += 0.005;
+            const radius = 15;
+            const spacing = 60;
+            const rows = Math.ceil(height / spacing) + 1;
+            for (let i = 0; i < rows; i++) {
+              const y = i * spacing;
+              const rowIsEven = i % 2 === 0;
+              const direction = rowIsEven ? 1 : -1;
+              let xOffset = (state.t * 20 * direction) % spacing;
+              for (let x = -spacing; x < width + spacing; x += spacing) {
+                let drawX = x + xOffset;
+                ctx.beginPath();
+                ctx.arc(drawX, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            }
+          },
+        },
+        {
+          init: () => ({ rotation: 0, pulse: 0 }),
+          draw: (state) => {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = randomColor.hex;
+            ctx.globalAlpha = 0.1;
+            state.rotation += 0.002;
+            state.pulse += 0.02;
+            const scale = 1 + Math.sin(state.pulse) * 0.2;
+            const spacing = 150;
+            for (let x = 0; x < width + spacing; x += spacing) {
+              for (let y = 0; y < height + spacing; y += spacing) {
+                const offsetX = ((y / spacing) % 2) * (spacing / 2);
+                ctx.save();
+                ctx.translate(x + offsetX, y);
+                ctx.rotate(state.rotation * (x % 2 === 0 ? 1 : -1));
+                ctx.scale(scale, scale);
+                for (let i = 0; i < 4; i++) {
+                  ctx.rotate(Math.PI / 2);
+                  ctx.beginPath();
+                  ctx.arc(20, 0, 15, 0, Math.PI * 2);
+                  ctx.fill();
+                }
+                ctx.restore();
+              }
+            }
+          },
+        },
+        {
+          init: () => {
+            const items = [];
+            const count = 50;
+            const w =
+              window.innerWidth && window.innerWidth > 0
+                ? window.innerWidth
+                : 1000;
+            const h =
+              window.innerHeight && window.innerHeight > 0
+                ? window.innerHeight
+                : 1000;
+            for (let i = 0; i < count; i++) {
+              items.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                size: 10 + Math.random() * 30,
+                speedY: -0.2 - Math.random() * 0.3,
+                rotation: Math.random() * Math.PI,
+                rotSpeed: (Math.random() - 0.5) * 0.02,
+              });
+            }
+            return { items };
+          },
+          draw: (state) => {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = randomColor.hex;
+            ctx.globalAlpha = 0.12;
+            state.items.forEach((item) => {
+              item.y += item.speedY;
+              item.rotation += item.rotSpeed;
+              if (item.y < -50) {
+                item.y = height + 50;
+                item.x = Math.random() * width;
+              }
+              if (item.x > width + 100) item.x = Math.random() * width;
+              if (item.x < -100) item.x = Math.random() * width;
+              ctx.save();
+              ctx.translate(item.x, item.y);
+              ctx.rotate(item.rotation);
+              ctx.beginPath();
+              ctx.moveTo(0, -item.size);
+              ctx.lineTo(item.size, item.size);
+              ctx.lineTo(-item.size, item.size);
+              ctx.closePath();
+              ctx.fill();
+              ctx.restore();
+            });
+          },
+        },
+      ];
 
-        const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
-        const patternState = selectedPattern.init();
-        function animate() {
-            selectedPattern.draw(patternState);
-            requestAnimationFrame(animate);
-        }
-        animate();
+      const selectedPattern =
+        patterns[Math.floor(Math.random() * patterns.length)];
+      const patternState = selectedPattern.init();
+      function animate() {
+        selectedPattern.draw(patternState);
+        requestAnimationFrame(animate);
+      }
+      animate();
 
-        document.getElementById('criticismForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const message = document.getElementById('message').value;
-            const isNotAnonymous = document.getElementById('toggle').checked;
-            const name = isNotAnonymous ? document.getElementById('name').value : "Anonymous";
-            const statusMsg = document.getElementById('statusMessage');
-            const btn = document.getElementById('submitBtn');
+      document
+        .getElementById("criticismForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const message = document.getElementById("message").value;
+          const isNotAnonymous = document.getElementById("toggle").checked;
+          const name = isNotAnonymous
+            ? document.getElementById("name").value
+            : "Anonymous";
+          const statusMsg = document.getElementById("statusMessage");
+          const btn = document.getElementById("submitBtn");
+          const btnTextEl = btn.querySelector('[data-i18n="submitBtn"]');
 
-            if (!message.trim()) return;
+          if (!message.trim()) return;
 
-            const originalBtnText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = `<span>Sending...</span>`;
-            btn.style.opacity = "0.7";
+          const originalBtnText = btnTextEl.textContent;
+          btn.disabled = true;
+          btnTextEl.textContent = translations[currentLang].sending;
+          btn.style.opacity = "0.7";
 
-            const text = `
+          const text = `
 📩 **New Criticism/Feedback**
 
 👤 **From:** ${name}
@@ -352,37 +606,43 @@
 ${message}
 
 🎨 **Theme Color:** ${randomColor.name}
+🌐 **Language:** ${currentLang === "fa" ? "Persian" : "English"}
 `;
-            try {
-                const response = await fetch('https://psdk-criticism.psdkiajhn.workers.dev', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: text })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    statusMsg.style.color = '#a6e3a1';
-                    statusMsg.innerText = "Sent successfully!";
-                    document.getElementById('criticismForm').reset();
-                    nameContainer.style.overflow = 'hidden';
-                    nameContainer.style.maxHeight = '0px';
-                    nameContainer.style.opacity = '0';
-                    nameContainer.style.marginTop = '0';
-                    nameContainer.style.marginBottom = '0';
-                    setTimeout(() => { statusMsg.innerText = ""; }, 3000);
-                } else {
-                    throw new Error("Server Error");
-                }
-            } catch (error) {
-                console.error(error);
-                statusMsg.style.color = '#f38ba8';
-                statusMsg.innerText = "Failed to send. Try again.";
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalBtnText;
-                btn.style.opacity = "1";
+          try {
+            const response = await fetch(
+              "https://psdk-criticism.psdkiajhn.workers.dev",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: text }),
+              },
+            );
+            const data = await response.json();
+            if (response.ok) {
+              statusMsg.style.color = "#a6e3a1";
+              statusMsg.innerText = translations[currentLang].successMsg;
+              document.getElementById("criticismForm").reset();
+              nameContainer.style.overflow = "hidden";
+              nameContainer.style.maxHeight = "0px";
+              nameContainer.style.opacity = "0";
+              nameContainer.style.marginTop = "0";
+              nameContainer.style.marginBottom = "0";
+              setTimeout(() => {
+                statusMsg.innerText = "";
+              }, 3000);
+            } else {
+              throw new Error("Server Error");
             }
+          } catch (error) {
+            console.error(error);
+            statusMsg.style.color = "#f38ba8";
+            statusMsg.innerText = translations[currentLang].errorMsg;
+          } finally {
+            btn.disabled = false;
+            btnTextEl.textContent = translations[currentLang].submitBtn;
+            btn.style.opacity = "1";
+          }
         });
     </script>
-</body>
+  </body>
 </html>

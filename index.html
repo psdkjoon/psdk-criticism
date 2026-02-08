@@ -176,6 +176,7 @@
   </head>
   <body class="min-h-screen flex flex-col items-center justify-center relative">
     <canvas id="canvas-bg"></canvas>
+
     <button
       id="langToggle"
       class="glass-panel rounded-full"
@@ -183,6 +184,7 @@
     >
       <span class="lang-icon accent-text" id="langText">فا</span>
     </button>
+
     <main
       class="w-full max-w-md p-5 mx-4 rounded-2xl glass-panel relative z-10 fade-in"
     >
@@ -202,6 +204,7 @@
           Speak your mind, I'm listening.
         </p>
       </div>
+
       <form id="criticismForm" class="space-y-4">
         <div
           class="flex items-center justify-between bg-[var(--ctp-surface1)] p-3 rounded-lg"
@@ -233,10 +236,11 @@
             <span class="toggle-slider"></span>
           </label>
         </div>
+
         <div
           id="nameFieldContainer"
           class="overflow-hidden -mx-2 px-2"
-          style="max-height: 0px; opacity: 0; margin: 0"
+          style="max-height: 0px; opacity: 0; margin-top: 0; margin-bottom: 0"
         >
           <label
             for="name"
@@ -252,6 +256,7 @@
             class="input-field w-full px-4 py-3 rounded-lg focus:ring-0"
           />
         </div>
+
         <div>
           <label
             for="message"
@@ -268,12 +273,18 @@
             required
           ></textarea>
         </div>
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAACZTEcdBubKfzoBI"></div>
+
+        <div
+          class="cf-turnstile"
+          data-sitekey="0x4AAAAAACZTEcdBubKfzoBI"
+          data-callback="onTurnstileSuccess"
+        ></div>
         <script
           src="https://challenges.cloudflare.com/turnstile/v0/api.js"
           async
           defer
         ></script>
+
         <button
           type="submit"
           id="submitBtn"
@@ -294,7 +305,13 @@
         <p id="statusMessage" class="text-center text-sm h-5 font-semibold"></p>
       </form>
     </main>
+
     <script>
+      let turnstileToken = "";
+      function onTurnstileSuccess(token) {
+        turnstileToken = token;
+      }
+
       const translations = {
         en: {
           tagline: "Speak your mind, I'm listening.",
@@ -323,6 +340,7 @@
           langBtn: "EN",
         },
       };
+
       let currentLang = localStorage.getItem("preferredLang") || "en";
       function setLanguage(lang) {
         currentLang = lang;
@@ -390,6 +408,13 @@
       const toggle = document.getElementById("toggle");
       const nameContainer = document.getElementById("nameFieldContainer");
       let overflowTimeout;
+      if (toggle.checked) {
+        nameContainer.style.maxHeight = "100px";
+        nameContainer.style.opacity = "1";
+        nameContainer.style.marginTop = "0";
+        nameContainer.style.marginBottom = "1rem";
+        nameContainer.style.overflow = "visible";
+      }
       toggle.addEventListener("change", function () {
         clearTimeout(overflowTimeout);
         if (this.checked) {
@@ -474,23 +499,22 @@
           const btn = document.getElementById("submitBtn");
           const btnTextEl = btn.querySelector('[data-i18n="submitBtn"]');
           if (!message.trim()) return;
-          const originalBtnText = btnTextEl.textContent;
           btn.disabled = true;
           btnTextEl.textContent = translations[currentLang].sending;
           btn.style.opacity = "0.7";
-          const turnstileToken = document.querySelector(
-            ".cf-turnstile > input[name='cf-turnstile-response']",
-          ).value;
-          const text = `📩 **New Criticism/Feedback**\n\n👤 **From:** ${name}\n📝 **Message:**\n${message}\n\n🎨 **Theme Color:** ${randomColor.name}\n🌐 **Language:** ${currentLang === "fa" ? "Persian" : "English"}`;
           try {
             const response = await fetch(
               "https://psdk-criticism.psdkiajhn.workers.dev",
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ text, text, turnstileToken }),
+                body: JSON.stringify({
+                  text: `📩 **New Criticism/Feedback**\n\n👤 **From:** ${name}\n📝 **Message:**\n${message}\n\n🎨 **Theme Color:** ${randomColor.name}\n🌐 **Language:** ${currentLang === "fa" ? "Persian" : "English"}`,
+                  turnstileToken: turnstileToken,
+                }),
               },
             );
+            const data = await response.json();
             if (response.ok) {
               statusMsg.style.color = "#a6e3a1";
               statusMsg.innerText = translations[currentLang].successMsg;
